@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users List with ag-Grid</title>
+
+    
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-grid.css">
+    <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/dist/styles/ag-theme-alpine.css">
+
+    
+    <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+    <script src="https://unpkg.com/ag-grid-enterprise/dist/ag-grid-enterprise.min.noStyle.js"></script>
+</head>
+<body>
+    <h2>Users List</h2>
+    <div id="agGrid" style="width: 800px; height: 8004x;" class="ag-theme-alpine"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var gridOptions = {
+                columnDefs: [
+                    { headerName: "ID", field: "id" },
+                    { headerName: "Email", field: "email" },
+                    { headerName: "Fullname", field: "fullname" },
+                    { headerName: "Password", field: "pass" },
+                    { headerName: "Country", field: "country" }
+                ],
+                defaultColDef: {
+                    flex: 1,
+                    minWidth: 150,
+                    sortable: true,
+                    filter: true,
+                },
+               
+                rowData: [],
+               
+            };
+
+            
+            fetch('get_user.php') 
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    gridOptions.api.setRowData(data);
+                })
+                .catch(function(error) {
+                    console.error('Error fetching users:', error);
+                });
+
+            // Render ag-Grid
+            new agGrid.Grid(document.querySelector('#agGrid'), gridOptions);
+        });
+    </script>
+</body>
+</html>
